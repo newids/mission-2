@@ -118,11 +118,32 @@ class QuizGame:
             "quizzes": [quiz.to_dict() for quiz in self.quizzes],
             "best_score": self.best_score,
         }
-        with open(STATE_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        try:
+            with open(STATE_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except OSError as e:
+            print(f"⚠️ 데이터 저장에 실패했습니다: {e}")
+
+    def load_state(self):
+        """state.json에서 데이터를 불러온다. 없거나 손상되면 기본 퀴즈를 사용한다."""
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            self.quizzes = [Quiz.from_dict(q) for q in data["quizzes"]]
+            self.best_score = data.get("best_score")
+            best = f"{self.best_score}점" if self.best_score is not None else "없음"
+            print(f"📂 저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개, 최고점수 {best})")
+        except FileNotFoundError:
+            print("📂 저장된 데이터가 없어 기본 퀴즈로 시작합니다.")
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError, OSError):
+            self.quizzes = default_quizzes()
+            self.best_score = None
+            print("⚠️ 데이터 파일이 손상되어 기본 퀴즈로 초기화합니다.")
+            self.save_state()
 
     def run(self):
         """메인 루프: 메뉴 출력 → 번호 선택 → 기능 실행."""
+        self.load_state()
         while True:
             self.show_menu()
             choice = self.read_int("    선택: ", 1, 5)
@@ -135,5 +156,6 @@ class QuizGame:
             elif choice == 4:
                 self.show_score()
             else:
+                self.save_state()
                 print("👋 게임을 종료합니다.")
                 break
