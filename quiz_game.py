@@ -20,15 +20,36 @@ class QuizGame:
         print("        5. 종료")
         print("=" * 40)
 
+    def read_int(self, prompt, min_value, max_value):
+        """숫자 입력 공통 처리: 공백 제거, 빈 입력/숫자 아님/범위 밖이면 재입력."""
+        while True:
+            raw = input(prompt).strip()
+            if raw == "":
+                print(f"⚠️ 아무것도 입력되지 않았습니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
+                continue
+            try:
+                value = int(raw)
+            except ValueError:
+                print(f"⚠️ 잘못된 입력입니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
+                continue
+            if not min_value <= value <= max_value:
+                print(f"⚠️ 잘못된 입력입니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
+                continue
+            return value
+
+    def read_text(self, prompt):
+        """문자 입력 공통 처리: 공백 제거, 빈 입력이면 재입력."""
+        while True:
+            raw = input(prompt).strip()
+            if raw:
+                return raw
+            print("⚠️ 빈 입력은 사용할 수 없습니다. 다시 입력하세요.")
+
     def run(self):
         """메인 루프: 메뉴 출력 → 번호 선택 → 기능 실행."""
         while True:
             self.show_menu()
-            raw = input("    선택: ").strip()
-            if not raw.isdigit() or not 1 <= int(raw) <= 5:
-                print("⚠️ 잘못된 입력입니다. 1-5 사이의 숫자를 입력하세요.")
-                continue
-            choice = int(raw)
+            choice = self.read_int("    선택: ", 1, 5)
             if choice == 1:
                 print("(준비 중) 퀴즈 풀기")
             elif choice == 2:
