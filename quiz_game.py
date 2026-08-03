@@ -1,6 +1,10 @@
 """게임 전체를 관리하는 QuizGame 클래스."""
 
-from quiz import default_quizzes
+import json
+
+from quiz import Quiz, default_quizzes
+
+STATE_FILE = "state.json"
 
 
 class QuizGame:
@@ -72,6 +76,28 @@ class QuizGame:
         print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
         print("=" * 40)
 
+    def add_quiz(self):
+        """문제/선택지 4개/정답 번호를 입력받아 새 퀴즈를 등록하고 저장한다."""
+        print("\n📌 새로운 퀴즈를 추가합니다.")
+        question = self.read_text("문제를 입력하세요: ")
+        choices = []
+        for i in range(1, 5):
+            choices.append(self.read_text(f"선택지 {i}: "))
+        answer = self.read_int("정답 번호 (1-4): ", 1, 4)
+
+        self.quizzes.append(Quiz(question, choices, answer))
+        self.save_state()
+        print("\n✅ 퀴즈가 추가되었습니다!")
+
+    def save_state(self):
+        """퀴즈 목록과 최고 점수를 state.json에 UTF-8로 저장한다."""
+        data = {
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+            "best_score": self.best_score,
+        }
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
     def run(self):
         """메인 루프: 메뉴 출력 → 번호 선택 → 기능 실행."""
         while True:
@@ -80,7 +106,7 @@ class QuizGame:
             if choice == 1:
                 self.play_quiz()
             elif choice == 2:
-                print("(준비 중) 퀴즈 추가")
+                self.add_quiz()
             elif choice == 3:
                 print("(준비 중) 퀴즈 목록")
             elif choice == 4:
