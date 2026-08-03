@@ -74,7 +74,18 @@ class QuizGame:
         score = round(correct / total * 100)
         print("=" * 40)
         print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
+        if self.best_score is None or score > self.best_score:
+            self.best_score = score
+            print("🎉 새로운 최고 점수입니다!")
+        self.save_state()
         print("=" * 40)
+
+    def show_score(self):
+        """최고 점수를 출력한다. 아직 퀴즈를 풀지 않았으면 안내한다."""
+        if self.best_score is None:
+            print("⚠️ 아직 퀴즈를 푼 기록이 없습니다. 먼저 퀴즈를 풀어보세요!")
+            return
+        print(f"\n🏆 최고 점수: {self.best_score}점")
 
     def add_quiz(self):
         """문제/선택지 4개/정답 번호를 입력받아 새 퀴즈를 등록하고 저장한다."""
@@ -122,7 +133,7 @@ class QuizGame:
             elif choice == 3:
                 self.list_quizzes()
             elif choice == 4:
-                print("(준비 중) 점수 확인")
+                self.show_score()
             else:
                 print("👋 게임을 종료합니다.")
                 break
