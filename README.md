@@ -79,3 +79,6 @@ mission-2/
 | `quizzes[].choices` | 문자열 배열(4개) | 선택지 |
 | `quizzes[].answer` | 정수(1~4) | 정답 번호 |
 | `best_score` | 정수 또는 null | 최고 점수(100점 만점). 아직 풀지 않았으면 null |
+
+---
+_clone/pull 실습: 복제된 저장소에서 추가한 줄입니다._
