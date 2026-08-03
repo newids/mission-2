@@ -1,6 +1,7 @@
 """게임 전체를 관리하는 QuizGame 클래스."""
 
 import json
+import random
 
 from quiz import Quiz, default_quizzes
 
@@ -59,9 +60,11 @@ class QuizGame:
 
         total = len(self.quizzes)
         correct = 0
+        # 보너스: 문제 순서를 랜덤하게 섞는다 (원본 목록은 유지)
+        shuffled = random.sample(self.quizzes, total)
         print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제)")
         print("-" * 40)
-        for number, quiz in enumerate(self.quizzes, start=1):
+        for number, quiz in enumerate(shuffled, start=1):
             quiz.display(number)
             user_answer = self.read_int("    정답 입력: ", 1, 4)
             if quiz.check(user_answer):
