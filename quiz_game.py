@@ -1,11 +1,13 @@
 """게임 전체를 관리하는 QuizGame 클래스."""
 
+from quiz import default_quizzes
+
 
 class QuizGame:
     """메뉴를 보여주고 사용자가 선택한 기능을 실행하는 게임 관리 클래스."""
 
     def __init__(self):
-        self.quizzes = []
+        self.quizzes = default_quizzes()
         self.best_score = None  # 아직 퀴즈를 풀지 않았으면 None
 
     def show_menu(self):
