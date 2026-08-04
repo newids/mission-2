@@ -49,8 +49,16 @@ mission-2/
 ├── state.json     # 데이터 파일 (퀴즈 목록 + 최고 점수, 실행 시 자동 생성)
 ├── README.md      # 프로젝트 문서
 ├── PLAN.md        # 수행 계획
-└── mission_2.md   # 미션 요구사항
+├── CHECKLIST.md   # 미션 요구사항 검토 체크리스트
+├── LEARNING.md    # 과제 목표(학습 내용) 정리
+├── mission_2.md   # 미션 요구사항
+└── docs/screenshots/  # 제출용 스크린샷
 ```
+
+## 미션 검토 및 학습 정리
+
+- [CHECKLIST.md](CHECKLIST.md) — `mission_2.md` 요구사항 대비 달성 여부 체크리스트와 제출 전 남은 작업
+- [LEARNING.md](LEARNING.md) — 과제 목표(Python 기초/클래스/파일 입출력/Git)를 이 프로젝트 코드로 설명한 학습 정리
 
 ## 데이터 파일 설명 (`state.json`)
 
