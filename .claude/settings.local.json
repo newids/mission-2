@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import sys,locale; print\\('stdin:',sys.stdin.encoding, sys.stdin.errors\\); print\\('stdout:',sys.stdout.encoding, sys.stdout.errors\\); print\\('fs:',sys.getfilesystemencoding\\(\\)\\); print\\('preferred:',locale.getpreferredencoding\\(False\\)\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 *)",
+      "Bash(iconv -f utf-8 -t cp949)",
+      "Bash(git -C /home/user/workspace/mission-2 log --oneline)"
+    ]
+  }
+}
