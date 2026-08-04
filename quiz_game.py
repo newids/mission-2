@@ -1,6 +1,7 @@
 """게임 전체를 관리하는 QuizGame 클래스."""
 
 import json
+import os
 import random
 
 from quiz import Quiz, default_quizzes
@@ -45,12 +46,20 @@ class QuizGame:
             return value
 
     def read_text(self, prompt):
-        """문자 입력 공통 처리: 공백 제거, 빈 입력이면 재입력."""
+        """문자 입력 공통 처리: 공백 제거, 빈 입력/깨진 문자면 재입력."""
         while True:
             raw = input(prompt).strip()
-            if raw:
-                return raw
-            print("⚠️ 빈 입력은 사용할 수 없습니다. 다시 입력하세요.")
+            if not raw:
+                print("⚠️ 빈 입력은 사용할 수 없습니다. 다시 입력하세요.")
+                continue
+            try:
+                # 터미널 인코딩 불일치로 들어온 대리 문자(surrogate)는
+                # UTF-8로 저장할 수 없으므로 여기서 걸러낸다.
+                raw.encode("utf-8")
+            except UnicodeEncodeError:
+                print("⚠️ 인식할 수 없는 문자가 포함되어 있습니다. 터미널 인코딩(UTF-8)을 확인하고 다시 입력하세요.")
+                continue
+            return raw
 
     def play_quiz(self):
         """저장된 퀴즈를 순서대로 출제하고 채점한 뒤 결과를 표시한다."""
@@ -121,11 +130,16 @@ class QuizGame:
             "quizzes": [quiz.to_dict() for quiz in self.quizzes],
             "best_score": self.best_score,
         }
+        # 임시 파일에 먼저 쓴 뒤 교체해서, 저장 중 오류가 나도 기존 파일이 손상되지 않게 한다.
+        temp_file = STATE_FILE + ".tmp"
         try:
-            with open(STATE_FILE, "w", encoding="utf-8") as f:
+            with open(temp_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-        except OSError as e:
+            os.replace(temp_file, STATE_FILE)
+        except (OSError, ValueError) as e:
             print(f"⚠️ 데이터 저장에 실패했습니다: {e}")
+            if os.path.exists(temp_file):
+                os.remove(temp_file)
 
     def load_state(self):
         """state.json에서 데이터를 불러온다. 없거나 손상되면 기본 퀴즈를 사용한다."""

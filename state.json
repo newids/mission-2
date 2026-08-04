@@ -49,7 +49,17 @@
         "아가씨"
       ],
       "answer": 2
+    },
+    {
+      "question": "문제",
+      "choices": [
+        "답1",
+        "답2",
+        "답3",
+        "답4"
+      ],
+      "answer": 4
     }
   ],
-  "best_score": null
+  "best_score": 17
 }
